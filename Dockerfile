@@ -1,6 +1,9 @@
 FROM node
 
-COPY . .
+COPY ./backend .
+COPY ./frontend .
+COPY ./public .
+COPY .DS_STORE .
 
 WORKDIR ./backend
 
