@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: melodify
+  name: melodify
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: melodify
+  template:
+    metadata:
+      labels:
+        app: melodify
+    spec:
+      containers:
+      - image: melodify:latest
+        name: melodify
+        env:
+        - name: DBHOST
+          valueFrom:
+            secretKeyRef:
+              name: database-creds
+              key: database_connection_string
+        - name: CRYPTER_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: database-creds
+              key: cypher
