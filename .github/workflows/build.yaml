@@ -28,6 +28,7 @@ jobs:
     
     - name: Build Container Image
       run: |-
+        cp ../Dockerfile .
         docker build -t $IMAGE_NAME .
 
     - name: Push Docker Image to GCR
