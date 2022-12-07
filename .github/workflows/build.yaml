@@ -14,9 +14,7 @@ jobs:
       run: |-
         chmod +x ./bumpver.sh 
         echo "GIT_TAG=$(./bumpver.sh $GH_TAG minor)" >> $GITHUB_ENV
-      shell: bash
-        
-
+      
 jobs:
   pull-push-gcr:
     name: Init server, build image, push to GCR
