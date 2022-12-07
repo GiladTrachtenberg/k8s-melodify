@@ -1,0 +1,42 @@
+name: Build & Push container image to GCR 
+on:
+  push:
+    branches: [ main ]
+jobs:
+  pull-push-gcr:
+    name: Init server, build image, push to GCR
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: meldofiy:latest
+      PROJECT_ID: gilad-dev-k8s
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2 #checks out this repo
+
+    - uses: actions/checkout@v2
+      with:
+        name: GiladTrachtenberg/Melodify #checks out the source code repo
+        ref: refs/heads/release
+
+    - uses: google-github-actions/auth@v1
+      with:
+         service_account: $$ {{ secrets.SERVICE_ACCOUNT_NAME }}
+         credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY}}
+
+    - name: Configure Docker Client #And Disable all interactive prompts from gcloud cli when running
+      run: |-
+        gcloud auth configure-docker --quiet 
+    
+    - name: Build Container Image
+      run: |-
+        docker build -t @IMAGE_NAME .
+
+    - name: Push Docker Image to GCR
+      env: 
+        GIT_TAG: $ {{ env.bumpver.sh 0.0.1  }}
+      run: |-
+          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+
+
+      
