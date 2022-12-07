@@ -19,20 +19,21 @@ jobs:
 
     - uses: google-github-actions/auth@v1
       with:
-         service_account: $$ {{ secrets.SERVICE_ACCOUNT_NAME }}
+         service_account: ${{ secrets.SERVICE_ACCOUNT_NAME }}
          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY}}
 
-    - name: Configure Docker Client #And Disable all interactive prompts from gcloud cli when running
+    - name: Configure Docker Client #And Disable all interactive prompts from gcloud cli
       run: |-
         gcloud auth configure-docker --quiet 
     
     - name: Build Container Image
       run: |-
+        ls
         docker build -t $IMAGE_NAME .
 
     - name: Push Docker Image to GCR
       env: 
-        GIT_TAG: $ {{ env.bumpver.sh 0.0.1  }}
+        GIT_TAG: ${{ env.bumpver.sh 0.0.1  }}
       run: |-
           docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
           docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
