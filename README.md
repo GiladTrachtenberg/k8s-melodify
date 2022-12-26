@@ -1,4 +1,4 @@
-# My DevOps Portofolio :)
+# My W.I.P DevOps Portofolio :)
 
 Hello everyone! This is my portfolio, the project I'm most proud of. It combines all aspect of the stack whilst using a dear friend's web application (more on it just down below). I hope you enjoy reading through it. 
 
