@@ -105,5 +105,11 @@ dist
 # TernJS port file
 .tern-port
 
-#workspace
-k8s-melodify.code-workspace
+#ignore all workspace files 
+*.code-workspace
+
+#ignore secrets
+secrets.yaml
+
+#ignore secret once again
+secret.yml
