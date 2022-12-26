@@ -4,13 +4,9 @@ on:
     branches: [ main ]
       
 jobs:
-  pull-push-gcr:
+  init-build:
     name: Init server, build image, push to GCR
     runs-on: ubuntu-latest
-    env:
-      GH_TAG: 0.0.0
-      IMAGE_NAME: meldofiy:latest
-      PROJECT_ID: gilad-dev-k8s
     steps:
     - name: Checkout
       uses: actions/checkout@v2 
@@ -29,15 +25,23 @@ jobs:
     - name: Build Container Image
       run: |-
         docker build -t $IMAGE_NAME .
-  
-    - name: Increment version
+
+  increment-push:
+    name: Increment Tag
+    runs-on: ubuntu-latest
+    env: 
+      GH_TAG: 0.0.0
+      IMAGE_NAME: meldofiy:latest
+      PROJECT_ID: gilad-dev-k8s
+    steps:
+    - name: Increment Tag
       run: |-
         chmod +x ./bumpver.sh 
         echo "GIT_TAG=$(./bumpver.sh $GH_TAG minor)" >> $GITHUB_ENV
 
     - name: Push Docker Image to GCR
       run: |-
-        docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+        docker tag $IMAGE_NAME gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
         docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
 
 
