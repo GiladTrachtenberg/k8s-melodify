@@ -8,6 +8,7 @@ Here are some of the technologies it invovles:
  - IaC (Terraform and technically, because it's an orchestration tool, Kubernetes)
  - GCP - VPC, Subnet, GCR, GKE, IAM, Bucket, Volume.
  - Kubernetes - Deployment, Services, Ingress (NGINX), TLS & Cert Manager, Helm (both an app template as well used templates), Prometheus & Grafana, Elastisearch (ELK), K9S.
+ - CI/CD - Using GitHub Actions as well as ArgoCD, whilst exercising a GitOps metholody. 
 
 # Melodify - The Application itself
 
