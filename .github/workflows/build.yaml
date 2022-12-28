@@ -30,19 +30,29 @@ jobs:
     name: Increment Tag
     runs-on: ubuntu-latest
     env: 
-      GH_TAG: 0.0.0
+      IMG_TAG: $ {{ secrets.IMG_TAG }}
       IMAGE_NAME: meldofiy:latest
       PROJECT_ID: gilad-dev-k8s
     steps:
     - name: Increment Tag
       run: |-
         chmod +x ./bumpver.sh 
-        echo "GIT_TAG=$(./bumpver.sh $GH_TAG minor)" >> $GITHUB_ENV
+        echo "GIT_TAG=$(./bumpver.sh $IMG_TAG release)" >> $GITHUB_ENV
 
     - name: Push Docker Image to GCR
       run: |-
         docker tag $IMAGE_NAME gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
         docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+        
+    - name: Bump Build version
+      env:
+        token : ${{ secrets.GH_PAT }}
+        GIT_TAG : ${{ env.GIT_TAG }}
+      run: |
+        echo $token > token.txt
+        gh auth login --with-token < token.txt
+        gh secret set IMG_TAG -b $GIT_TAG
+        echo Bumped Version to : $GIT_TAG
 
 
       
